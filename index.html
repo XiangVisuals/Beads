@@ -163,7 +163,7 @@
                 <div class="w-7 h-7 rounded bg-slate-800 flex items-center justify-center text-white">
                     <i class="fa-solid fa-shapes text-[12px]"></i>
                 </div>
-                <h1 class="text-sm font-bold text-slate-800 tracking-tight">拼豆工坊 <span class="text-brand-500 font-black">PRO</span></h1>
+                <h1 class="text-sm font-bold text-slate-800 tracking-tight">拼豆工坊 <span class="text-brand-500 font-black">1.0</span></h1>
             </div>
             
             <div class="flex items-center gap-2" id="header-actions" style="display: none;">
@@ -270,7 +270,7 @@
 
                 <div id="workspace" class="flex-1 relative canvas-bg hidden w-full h-full">
                     <!-- 扁平化工具栏 -->
-                    <div class="absolute top-4 left-1/2 -translate-x-1/2 flex items-center p-1 bg-white border border-slate-200 shadow-sm rounded-md z-20">
+                    <div class="ui-layer absolute top-4 left-1/2 -translate-x-1/2 flex items-center p-1 bg-white border border-slate-200 shadow-sm rounded-md z-20">
                         <div class="flex gap-0.5">
                             <button class="tool-btn active-tool w-8 h-8 rounded flex items-center justify-center text-white bg-slate-700 transition-all text-xs" data-tool="pan"><i class="fa-solid fa-hand"></i></button>
                             <button class="tool-btn w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs" data-tool="pen"><i class="fa-solid fa-pen"></i></button>
@@ -294,6 +294,13 @@
                     </div>
                     
                     <canvas id="main-canvas" class="absolute inset-0 z-10" style="touch-action: none;"></canvas>
+                    
+                    <!-- 移动端网格宽度快捷调节 (仅在设计视图下显示) -->
+                    <div class="ui-layer absolute left-4 right-4 bg-white/95 backdrop-blur-sm border border-slate-200 p-3 rounded-lg shadow-float z-20 md:hidden flex items-center gap-3" style="bottom: calc(var(--nav-height) + var(--s-bottom) + 16px);">
+                        <span class="text-xs font-bold text-slate-700 whitespace-nowrap">网格宽度</span>
+                        <input type="range" id="canvas-setting-width" min="10" max="150" value="50" class="flex-1">
+                        <span class="text-[11px] font-mono font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded border border-brand-100 w-[55px] text-center" id="canvas-val-width">50 px</span>
+                    </div>
                 </div>
             </main>
 
@@ -377,8 +384,13 @@
                 <img id="preview-image" class="max-w-full max-h-full object-contain drop-shadow-sm transition-opacity duration-300 opacity-0" src="" alt="Preview">
             </div>
             
-            <div class="p-3 bg-white border-t border-slate-200 flex justify-end shrink-0">
-                <button onclick="savePreviewImage()" class="w-full md:w-auto h-9 px-6 rounded bg-slate-800 hover:bg-black text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+            <div class="p-3 bg-white border-t border-slate-200 flex flex-col sm:flex-row md:items-center justify-between shrink-0 gap-3">
+                <div class="flex items-center gap-3 w-full sm:w-1/2">
+                    <span class="text-xs font-bold text-slate-700 whitespace-nowrap">网格宽度</span>
+                    <input type="range" id="preview-setting-width" min="10" max="150" value="50" class="flex-1">
+                    <span class="text-[11px] font-mono font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded border border-brand-100 w-[55px] text-center" id="preview-val-width">50 px</span>
+                </div>
+                <button onclick="savePreviewImage()" class="w-full sm:w-auto h-9 px-6 rounded bg-slate-800 hover:bg-black text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors">
                     <i class="fa-solid fa-download"></i> 保存效果图
                 </button>
             </div>
@@ -890,19 +902,19 @@
 
         function exportProfessionalBlueprint() {
             if (AppState.gridW === 0) { showToast('暂无数据可以导出'); return; }
-            showToast('生成标准图纸中...', 'fa-spinner fa-spin');
+            showToast('生成超清图纸中...', 'fa-spinner fa-spin');
             
             setTimeout(() => {
                 const w = AppState.gridW, h = AppState.gridH;
-                const CELL_SIZE = 40, COORD_SIZE = 30;
+                const CELL_SIZE = 80, COORD_SIZE = 60; // 翻倍分辨率，单元格放大
                 
                 const usedColors = Object.entries(AppState.materials).sort((a,b) => b[1]-a[1]);
                 const colsPerLegendRow = 8;
                 const legendRows = Math.ceil(usedColors.length / colsPerLegendRow);
-                const LEGEND_HEIGHT = legendRows * 60 + 80;
+                const LEGEND_HEIGHT = legendRows * 100 + 120; // 增加图例区域高度
 
                 const canvas = document.createElement('canvas');
-                const pad = 40;
+                const pad = 60; // 增加边缘留白
                 canvas.width = COORD_SIZE * 2 + w * CELL_SIZE + pad * 2; 
                 canvas.height = COORD_SIZE * 2 + h * CELL_SIZE + LEGEND_HEIGHT + pad * 2;
                 const ctx = canvas.getContext('2d');
@@ -910,7 +922,7 @@
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 const gridStartX = COORD_SIZE + pad, gridStartY = COORD_SIZE + pad;
 
-                ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; // 字号翻倍
                 for (let y=0; y<h; y++) {
                     for (let x=0; x<w; x++) {
                         const c = AppState.gridData[y*w+x];
@@ -928,7 +940,7 @@
                 ctx.fillRect(pad, gridStartY, COORD_SIZE, h*CELL_SIZE);
                 ctx.fillRect(gridStartX + w*CELL_SIZE, gridStartY, COORD_SIZE, h*CELL_SIZE);
 
-                ctx.fillStyle = '#475569'; ctx.font = '12px Arial';
+                ctx.fillStyle = '#475569'; ctx.font = '20px Arial'; // 坐标字号翻倍
                 for (let x=0; x<w; x++) {
                     const cx = gridStartX + x*CELL_SIZE + CELL_SIZE/2;
                     ctx.fillText(x+1, cx, pad + COORD_SIZE/2); ctx.fillText(x+1, cx, gridStartY + h*CELL_SIZE + COORD_SIZE/2);
@@ -939,12 +951,12 @@
                 }
 
                 ctx.translate(0.5, 0.5); 
-                ctx.strokeStyle = 'rgba(203, 213, 225, 0.5)'; ctx.lineWidth = 1; ctx.beginPath();
+                ctx.strokeStyle = 'rgba(203, 213, 225, 0.5)'; ctx.lineWidth = 2; ctx.beginPath();
                 for(let x=1; x<w; x++) if(x%5!==0){ ctx.moveTo(gridStartX+x*CELL_SIZE, pad); ctx.lineTo(gridStartX+x*CELL_SIZE, gridStartY+h*CELL_SIZE+COORD_SIZE); }
                 for(let y=1; y<h; y++) if(y%5!==0){ ctx.moveTo(pad, gridStartY+y*CELL_SIZE); ctx.lineTo(gridStartX+w*CELL_SIZE+COORD_SIZE, gridStartY+y*CELL_SIZE); }
                 ctx.stroke();
 
-                ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)'; ctx.lineWidth = 2; ctx.beginPath();
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)'; ctx.lineWidth = 4; ctx.beginPath(); // 加粗主网格
                 for(let x=0; x<=w; x+=5){ ctx.moveTo(gridStartX+x*CELL_SIZE, pad); ctx.lineTo(gridStartX+x*CELL_SIZE, gridStartY+h*CELL_SIZE+COORD_SIZE); }
                 for(let y=0; y<=h; y+=5){ ctx.moveTo(pad, gridStartY+y*CELL_SIZE); ctx.lineTo(gridStartX+w*CELL_SIZE+COORD_SIZE, gridStartY+y*CELL_SIZE); }
                 if(w%5!==0){ ctx.moveTo(gridStartX+w*CELL_SIZE, pad); ctx.lineTo(gridStartX+w*CELL_SIZE, gridStartY+h*CELL_SIZE+COORD_SIZE); }
@@ -952,32 +964,32 @@
                 ctx.stroke();
                 ctx.translate(-0.5, -0.5); 
 
-                const legendStartY = gridStartY + h*CELL_SIZE + COORD_SIZE + 40;
+                const legendStartY = gridStartY + h*CELL_SIZE + COORD_SIZE + 60;
                 let lx = pad, ly = legendStartY;
                 const activePalette = PALETTES[AppState.settings.palette];
                 const brandName = document.getElementById('setting-palette').options[document.getElementById('setting-palette').selectedIndex].text;
                 
-                ctx.fillStyle = '#1e293b'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'left';
-                ctx.fillText(`物料清单 (BOM) - ${brandName}`, lx, ly); ly += 30; ctx.font = 'bold 13px Arial';
+                ctx.fillStyle = '#1e293b'; ctx.font = 'bold 36px Arial'; ctx.textAlign = 'left';
+                ctx.fillText(`物料清单 (BOM) - ${brandName}`, lx, ly); ly += 60; ctx.font = 'bold 24px Arial';
 
                 usedColors.forEach((entry, index) => {
                     const id = entry[0], count = entry[1];
                     const colorObj = activePalette.find(c => c.id === id);
-                    if(index > 0 && index % colsPerLegendRow === 0) { lx = pad; ly += 50; }
+                    if(index > 0 && index % colsPerLegendRow === 0) { lx = pad; ly += 80; } // 增加行距
                     
                     if(colorObj) {
-                        ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 24, 24);
-                        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.strokeRect(lx, ly, 24, 24);
+                        ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 48, 48); // 图例色块放大
+                        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2; ctx.strokeRect(lx, ly, 48, 48);
                         
                         ctx.fillStyle = '#475569'; ctx.textAlign = 'left'; 
-                        ctx.fillText(`${id}  × ${count}`, lx + 36, ly + 16);
+                        ctx.fillText(`${id}  × ${count}`, lx + 64, ly + 32); // 图例文字放大
                     }
-                    lx += 120;
+                    lx += 240; // 增加列距
                 });
 
-                const a = document.createElement('a'); a.href = canvas.toDataURL('image/png');
-                a.download = `Blueprint_${w}x${h}.png`; a.click(); 
-                showToast('图纸导出成功', 'fa-check-circle');
+                const a = document.createElement('a'); a.href = canvas.toDataURL('image/png', 1.0);
+                a.download = `Blueprint_HD_${w}x${h}.png`; a.click(); 
+                showToast('超清图纸导出成功', 'fa-check-circle');
                 triggerHaptic('success');
             }, 100);
         }
@@ -1028,17 +1040,32 @@
             dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-brand-500', 'bg-brand-50'); });
             dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('border-brand-500', 'bg-brand-50'); handleFile(e.dataTransfer.files[0]); });
 
-            const bindRange = (id, prop, isVal=true, suffix='') => {
-                document.getElementById(id).addEventListener('input', (e) => {
-                    AppState.settings[prop] = parseInt(e.target.value);
-                    if(isVal) {
-                        let txt = AppState.settings[prop]; if(prop!=='width'&&txt>0) txt='+'+txt;
-                        document.getElementById(`val-${prop}`).textContent = txt + suffix;
+            // 全局统一网格宽度调节函数 (同步参数栏、画布栏和装裱预览栏)
+            const syncWidthSetting = (val, fromPreview = false) => {
+                AppState.settings.width = val;
+                document.getElementById('setting-width').value = val;
+                document.getElementById('canvas-setting-width').value = val;
+                document.getElementById('preview-setting-width').value = val;
+                
+                const txt = val + ' px';
+                document.getElementById('val-width').textContent = txt;
+                document.getElementById('canvas-val-width').textContent = txt;
+                document.getElementById('preview-val-width').textContent = txt;
+                
+                clearTimeout(AppState._timer); 
+                AppState._timer = setTimeout(() => {
+                    processImage();
+                    // 如果正在打开装裱预览，自动重绘效果
+                    if (fromPreview && !document.getElementById('preview-modal').classList.contains('hidden')) {
+                        showFramedPreview();
                     }
-                    clearTimeout(AppState._timer); AppState._timer = setTimeout(processImage, 100); 
-                });
+                }, 150);
             };
-            bindRange('setting-width', 'width', true, ' px');
+
+            document.getElementById('setting-width').addEventListener('input', (e) => syncWidthSetting(parseInt(e.target.value)));
+            document.getElementById('canvas-setting-width').addEventListener('input', (e) => syncWidthSetting(parseInt(e.target.value)));
+            document.getElementById('preview-setting-width').addEventListener('input', (e) => syncWidthSetting(parseInt(e.target.value), true));
+
             document.getElementById('setting-palette').addEventListener('change', (e) => { AppState.settings.palette = e.target.value; renderPaletteUI(); processImage(); });
             
             const bindToggle = (id, prop) => {
@@ -1075,10 +1102,16 @@
             const cWrap = document.getElementById('workspace');
             
             document.body.addEventListener('touchmove', function(e) {
-                if (!e.target.closest('.native-scroll')) e.preventDefault();
+                // 放行滚动区域和滑块类型的原生交互
+                if (e.target.closest('.native-scroll') || e.target.type === 'range') return;
+                e.preventDefault();
             }, { passive: false });
 
-            cWrap.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+            cWrap.addEventListener('touchmove', function(e) { 
+                // 点击到 UI 控制层时放行，允许滑块顺利拖拽
+                if (e.target.closest('.ui-layer')) return;
+                e.preventDefault(); 
+            }, { passive: false });
 
             const handleDraw = (x, y) => {
                 const rect = document.getElementById('main-canvas').getBoundingClientRect();
@@ -1117,6 +1150,9 @@
             };
 
             const ptrDown = (e) => {
+                // 防护：如果点击的是悬浮的 UI 工具栏或滑块容器，直接忽略，不触发画布拖拽/绘画
+                if (e.target.closest('.ui-layer')) return;
+                
                 if(AppState.gridW===0) return;
                 const cx = e.clientX || (e.touches && e.touches[0].clientX); const cy = e.clientY || (e.touches && e.touches[0].clientY);
                 if (e.button===1 || AppState.canvas.tool==='pan' || (e.touches && e.touches.length>1) || e.ctrlKey) {
