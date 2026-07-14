@@ -102,7 +102,7 @@
         }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
 
-        /* --- 滑动视图架构 --- */
+        /* 滑动视图架构 */
         .view-pager-container {
             display: flex;
             width: 300vw;
@@ -131,7 +131,7 @@
             }
             .view-panel {
                 width: auto;
-                border-radius: 6px; /* 微圆角 */
+                border-radius: 6px;
                 box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
                 background: white;
                 border: 1px solid rgba(0,0,0,0.05);
@@ -141,12 +141,11 @@
             .mobile-nav { display: none !important; }
         }
 
-        /* 方正 Toast */
+        /* 方正 Toast 和 Modal */
         #toast-container { position: fixed; top: max(24px, var(--s-top)); left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
         .toast { background: rgba(15, 23, 42, 0.95); color: #fff; padding: 10px 20px; border-radius: 4px; font-size: 13px; display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .toast.show { opacity: 1; transform: translateY(0); }
         
-        /* Modal 背景 */
         .modal-overlay { background: rgba(15, 23, 42, 0.85); opacity: 0; transition: opacity 0.2s ease; }
         .modal-overlay.show { opacity: 1; }
         .modal-content { transform: translateY(20px); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -220,15 +219,16 @@
                             <p class="text-[10px] text-slate-400 text-center">决定最终成品的精细度和尺寸</p>
                         </div>
 
+                        <!-- 替换为全新品牌色卡选项 -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-700 block">色彩标准库</label>
+                            <label class="text-xs font-bold text-slate-700 block">专属色彩对照库</label>
                             <div class="relative">
                             <select id="setting-palette" class="w-full appearance-none bg-white border border-slate-200 rounded-md px-3 py-2.5 text-xs text-slate-700 font-medium focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer">
-                                <option value="standard">专业标准 50 色 (推荐)</option>
-                                <option value="perler">Perler 经典色系</option>
-                                <option value="artkal">Artkal (阿特卡儿) 拼豆色</option>
-                                <option value="hama">Hama (哈玛) 拼豆色</option>
-                                <option value="grayscale">黑白灰阶滤镜</option>
+                                <option value="coco">COCO (可可) 拼豆色</option>
+                                <option value="manman">漫漫 (ManMan) 拼豆色</option>
+                                <option value="panpan">盼盼 (PanPan) 拼豆色</option>
+                                <option value="mixiaowo">咪小窝 拼豆色</option>
+                                <option value="shishi">柿柿 拼豆色</option>
                             </select>
                             <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[10px]"></i>
                         </div>
@@ -398,56 +398,153 @@
 
         const AppState = {
             imageObj: null, gridData: [], gridW: 0, gridH: 0, materials: {}, currentTab: 1,
-            settings: { width: 50, palette: 'standard', dither: false, ignoreWhite: true, brightness: 0, contrast: 0, showGrid: true, shape: 'circle' },
+            // 默认选中第一套牌子 coco
+            settings: { width: 50, palette: 'coco', dither: false, ignoreWhite: true, brightness: 0, contrast: 0, showGrid: true, shape: 'circle' },
             canvas: { scale: 1, offsetX: 0, offsetY: 0, isDragging: false, startX: 0, startY: 0, tool: 'pan', selectedColorId: null, beadSize: 24 }
         };
 
-        const PALETTES = {
-            standard: [
-                { id: 'F11', name: '深咖啡', hex: '#452A20', textColor: '#FFFFFF' }, { id: 'G4',  name: '浅肤色', hex: '#F0C8A0', textColor: '#000000' },
-                { id: 'C8',  name: '亮蓝色', hex: '#2359A6', textColor: '#FFFFFF' }, { id: 'H2',  name: '纯白色', hex: '#FFFFFF', textColor: '#000000' },
-                { id: 'A1', name: '黑色', hex: '#1C1C1C', textColor: '#FFFFFF' }, { id: 'A2', name: '深灰', hex: '#595959', textColor: '#FFFFFF' },
-                { id: 'A3', name: '浅灰', hex: '#A3A3A3', textColor: '#000000' }, { id: 'B1', name: '正红', hex: '#D82833', textColor: '#FFFFFF' },
-                { id: 'B2', name: '暗红', hex: '#9E1A22', textColor: '#FFFFFF' }, { id: 'B3', name: '粉红', hex: '#F0A1B2', textColor: '#000000' },
-                { id: 'C1', name: '橙色', hex: '#F07D1C', textColor: '#000000' }, { id: 'C2', name: '浅橙', hex: '#F5B075', textColor: '#000000' },
-                { id: 'D1', name: '正黄', hex: '#F6D927', textColor: '#000000' }, { id: 'D2', name: '浅黄', hex: '#FDF19E', textColor: '#000000' },
-                { id: 'E1', name: '深绿', hex: '#26663B', textColor: '#FFFFFF' }, { id: 'E2', name: '正绿', hex: '#4CA35D', textColor: '#000000' },
-                { id: 'E3', name: '浅绿', hex: '#A1D99B', textColor: '#000000' }, { id: 'F1', name: '天蓝', hex: '#63B3E3', textColor: '#000000' },
-                { id: 'F2', name: '深蓝', hex: '#1C315E', textColor: '#FFFFFF' }, { id: 'G1', name: '紫色', hex: '#79428B', textColor: '#FFFFFF' },
-                { id: 'G2', name: '浅紫', hex: '#C298D4', textColor: '#000000' }, { id: 'H1', name: '土黄', hex: '#CBA052', textColor: '#000000' },
-                { id: 'H3', name: '奶油', hex: '#F8E9C9', textColor: '#000000' }, { id: 'I1', name: '透明', hex: '#E2E8F0', textColor: '#000000' }
-            ],
-            perler: [
-                { id: 'P01', name: 'White', hex: '#FFFFFF', textColor: '#000' }, { id: 'P02', name: 'Black', hex: '#2B2B2B', textColor: '#FFF' },
-                { id: 'P03', name: 'Red', hex: '#C73843', textColor: '#FFF' }, { id: 'P04', name: 'Orange', hex: '#F37827', textColor: '#000' },
-                { id: 'P05', name: 'Yellow', hex: '#F6D835', textColor: '#000' }, { id: 'P06', name: 'Green', hex: '#3A8B58', textColor: '#FFF' },
-                { id: 'P07', name: 'Blue', hex: '#5285CD', textColor: '#FFF' }, { id: 'P09', name: 'Purple', hex: '#633C7B', textColor: '#FFF' },
-                { id: 'P10', name: 'Pink', hex: '#F271A6', textColor: '#000' }, { id: 'P12', name: 'Brown', hex: '#5C3E26', textColor: '#FFF' }
-            ],
-            artkal: [
-                { id: 'S01', name: '纯黑', hex: '#1A1A1A', textColor: '#FFF' }, { id: 'S02', name: '纯白', hex: '#FAFAFA', textColor: '#000' },
-                { id: 'S03', name: '正红', hex: '#E32636', textColor: '#FFF' }, { id: 'S04', name: '正黄', hex: '#FDE910', textColor: '#000' },
-                { id: 'S05', name: '宝蓝', hex: '#1C39BB', textColor: '#FFF' }, { id: 'S06', name: '正绿', hex: '#008F39', textColor: '#FFF' },
-                { id: 'S07', name: '橘红', hex: '#FF7F00', textColor: '#000' }, { id: 'S08', name: '紫罗兰', hex: '#8A2BE2', textColor: '#FFF' },
-                { id: 'S09', name: '玫红', hex: '#FF007F', textColor: '#FFF' }, { id: 'S10', name: '棕色', hex: '#964B00', textColor: '#FFF' },
-                { id: 'S11', name: '天蓝', hex: '#87CEEB', textColor: '#000' }, { id: 'S12', name: '浅绿', hex: '#98FB98', textColor: '#000' },
-                { id: 'S13', name: '肤色', hex: '#FFCBA4', textColor: '#000' }, { id: 'S14', name: '银灰', hex: '#C0C0C0', textColor: '#000' },
-                { id: 'S15', name: '深蓝', hex: '#000080', textColor: '#FFF' }
-            ],
-            hama: [
-                { id: 'H01', name: 'Hama 白', hex: '#F9F9F9', textColor: '#000' }, { id: 'H18', name: 'Hama 黑', hex: '#111111', textColor: '#FFF' },
-                { id: 'H05', name: 'Hama 红', hex: '#CE1126', textColor: '#FFF' }, { id: 'H03', name: 'Hama 黄', hex: '#FFD700', textColor: '#000' },
-                { id: 'H09', name: 'Hama 蓝', hex: '#0055A4', textColor: '#FFF' }, { id: 'H10', name: 'Hama 绿', hex: '#008000', textColor: '#FFF' },
-                { id: 'H12', name: 'Hama 棕', hex: '#654321', textColor: '#FFF' }, { id: 'H26', name: 'Hama 肤', hex: '#FFCC99', textColor: '#000' },
-                { id: 'H17', name: 'Hama 灰', hex: '#808080', textColor: '#FFF' }, { id: 'H07', name: 'Hama 紫', hex: '#6A0DAD', textColor: '#FFF' },
-                { id: 'H04', name: 'Hama 橙', hex: '#FF8C00', textColor: '#000' }, { id: 'H06', name: 'Hama 粉', hex: '#FFC0CB', textColor: '#000' }
-            ],
-            grayscale: [
-                { id: 'G01', name: '白', hex: '#FFFFFF', textColor: '#000' }, { id: 'G03', name: '浅灰', hex: '#C0C0C0', textColor: '#000' },
-                { id: 'G05', name: '深灰', hex: '#696969', textColor: '#FFF' }, { id: 'G06', name: '黑', hex: '#000000', textColor: '#FFF' }
-            ]
+        // 动态亮度计算：自动决定文字应为黑色或白色
+        const getTextColorForHex = (hex) => {
+            const h = hex.replace('#', '');
+            if(h.length < 6) return '#000000';
+            const r = parseInt(h.substr(0, 2), 16);
+            const g = parseInt(h.substr(2, 2), 16);
+            const b = parseInt(h.substr(4, 2), 16);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return (yiq >= 128) ? '#000000' : '#FFFFFF';
         };
-        AppState.canvas.selectedColorId = PALETTES.standard[0].id;
+
+        // 全新构造的基于提供的多品牌对照表的高级 CSV 数据池
+        // 字段索引: 0:通用ID, 1:HEX, 2:COCO, 3:漫漫, 4:盼盼, 5:咪小窝, 6:柿柿
+        const brandColorDatabase = [
+            "A1,#FAF5CD,E2,E2,65,77,E0Y", "A2,#FCFED6,E1,B1,2,2,H00", "A3,#FCFF92,E5,B2,28,28,H02",
+            "A4,#F7EC5C,E7,B3,3,3,F05", "A5,#FFE44B,D3,B4,74,79,F15", "A6,#FDA951,D5,B5,29,29,E06",
+            "A7,#FA8C4F,D8,B6,4,4,C06", "A8,#F9E045,E8,B10,88,98,F16", "A9,#F99C5F,D6,B11,90,97,C04",
+            "A10,#F47E36,D7,B12,89,96,C05", "A11,#FEDB99,D1,E11,100,109,E03", "A12,#FDA276,K9,A18,99,110,B01",
+            "A13,#FEC667,D4,B13,131,116,E07", "A14,#F85842,C5,B14,138,135,B06", "A15,#FBF65E,E4,B15,150,150,H05",
+            "A16,#FEFF97,E3,IC4,216,216,H01", "A17,#FDE173,E6,IC9,213,213,E05", "A18,#FCBF80,D2,IC14,223,208,D02",
+            "A19,#FD7E77,K10,IC15,218,218,A02", "A20,#F9D66E,E9,Q6,242,242,F06", "A21,#FAE393,E10,R7,276,261,E02",
+            "A22,#EDF878,E11,R6,270,255,F01", "A23,#E1C9BD,E12,R8,274,259,D00", "A24,#F3F6A9,E13,G3,288,273,I00",
+            "A25,#FFD785,E14,G4,289,274,E04", "A26,#FEC832,E15,G5,290,275,D05",
+            "B1,#DFF139,F5,C1,48,48,I15", "B2,#64F343,F8,C2,33,33,J05", "B3,#9FF685,F4,C7,26,26,J03",
+            "B4,#5FDF34,F9,C3,66,78,J04", "B5,#39E158,F10,C4,39,39,J23", "B6,#64E0A4,G4,C9,11,11,M13",
+            "B7,#3FAE7C,G5,C10,44,44,N37", "B8,#1D9E54,F11,C5,10,10,M58", "B9,#2A5037,F16,C6,79,84,M86",
+            "B10,#9AD1BA,G3,C11,96,100,N11", "B11,#627032,F14,C12,97,99,I74", "B12,#1A6E3D,F12,C13,106,111,N58",
+            "B13,#C8E87D,F2,C14,128,119,I03", "B14,#ACE84C,F6,C15,129,117,I05", "B15,#305335,F15,C16,130,122,M76",
+            "B16,#C0ED9C,F3,C17,141,133,J01", "B17,#9EB33E,F13,C18,142,141,I35", "B18,#E6ED4F,F7,C19,147,147,H15",
+            "B19,#26B78E,G6,DH15,191,174,M24", "B20,#CAEDCF,G2,DH10,192,175,J0Y", "B21,#176268,G7,DH2,207,194,N67",
+            "B22,#0A4241,G8,DH7,206,193,N87", "B23,#343B1A,F17,DH12,205,192,I83", "B24,#E8FAA6,F1,IC5,222,207,I01",
+            "B25,#4E846D,F18,Q13,240,240,M62", "B26,#907C35,F19,Q7,248,248,F44", "B27,#D0E0AF,F20,R10,262,262,I10",
+            "B28,#9EE5BB,F21,R11,269,254,J02", "B29,#C6DF5F,F22,R9,268,253,I14", "B30,#E3FBB1,F23,G6,285,270,I0Y",
+            "B31,#B2E694,F24,G7,286,271,J11", "B32,#92AD60,F25,G12,287,272,I42",
+            "C1,#FFFEE4,G1,C8,64,76,J0R", "C2,#ABF8FE,H3,D1,30,30,N0Y", "C3,#9EE0F8,H4,D2,63,75,S01",
+            "C4,#44CDFB,H5,D3,77,82,S03", "C5,#06ABE3,H7,D7,34,34,S29", "C6,#54A7E9,H8,D4,25,25,T14",
+            "C7,#3977CC,H13,D8,9,9,S28", "C8,#0F52BD,H14,D9,52,71,T28", "C9,#3349C3,H16,N5,42,42,T16",
+            "C10,#3DBBE3,H9,D25,121,130,N15", "C11,#2ADED3,H10,D28,122,113,N27", "C12,#1E334E,H23,D26,120,120,T76",
+            "C13,#CDE7FE,H1,D30,140,142,S0R", "C14,#D6FDFC,H2,D29,139,136,N0R", "C15,#21C5C4,H11,D31,143,132,N25",
+            "C16,#1858A2,H18,D32,149,149,S58", "C17,#02D1F3,H19,D36,163,156,N14", "C18,#213244,H24,DH6,196,196,T84",
+            "C19,#188690,H12,DH9,202,202,N47", "C20,#1A70A9,H17,DH14,197,197,S48", "C21,#BEDDFC,H6,IC3,212,212,S0Y",
+            "C22,#6BB1BB,H25,Q11,239,239,S33", "C23,#C8E2F9,H26,R13,263,263,N17", "C24,#7EC5F9,H27,R14,267,252,S02",
+            "C25,#A9E8E0,H28,R12,271,256,N01", "C26,#42ADD1,H29,R15,265,250,S37", "C27,#D0DEEF,H30,G13,279,264,T0R",
+            "C28,#BDCEED,H31,G14,280,265,T0Y", "C29,#364A89,H32,G15,281,266,T62",
+            "D1,#ACB7EF,J7,D5,46,46,T01", "D2,#868DD3,J8,D6,36,36,T12", "D3,#3653AF,H15,D10,8,8,T49",
+            "D4,#162C7E,H20,D11,75,80,T67", "D5,#B34EC6,J12,D13,32,32,W32", "D6,#B37BDC,J11,D14,27,27,U11",
+            "D7,#8758A9,J15,D12,7,7,W52", "D8,#E3D2FE,J3,D16,94,89,U1Y", "D9,#D6BAF5,J4,D17,93,90,U00",
+            "D10,#301A49,J19,D15,92,91,U73", "D11,#BCBAE2,J6,D19,105,104,T10", "D12,#DC99CE,J10,D20,104,105,W10",
+            "D13,#B5038F,J14,D21,103,106,X25", "D14,#882893,J16,D22,102,107,W43", "D15,#2F1E8E,H22,D18,101,108,U65",
+            "D16,#E2E4F0,J1,D23,118,126,U0R", "D17,#C7D3F9,J5,D24,119,128,T11", "D18,#9A64B8,J13,D27,124,125,W31",
+            "D19,#D8C2D9,J9,D33,153,153,W1R", "D20,#9C34AD,J17,D34,161,155,W33", "D21,#940595,J18,D35,162,158,W44",
+            "D22,#383995,H21,DH1,198,198,U54", "D23,#FADBF8,J2,IC8,217,217,U0Y", "D24,#768AE1,J20,Q14,244,244,U13",
+            "D25,#4950C2,J21,Q15,249,234,U45", "D26,#D6C6EB,J22,R1,273,258,W00",
+            "E1,#F6D4CB,K3,E1,18,18,Z00", "E2,#FCC1DD,K15,A7,38,38,X0Y", "E3,#F6BDE8,K17,A8,62,74,X01",
+            "E4,#E9639E,K21,A9,6,6,X13", "E5,#F1559F,K19,A10,40,40,X04", "E6,#EC4072,K22,A11,20,20,Z06",
+            "E7,#C63674,K25,A12,41,41,X46", "E8,#FDDBE9,K12,A13,84,103,Z0Y", "E9,#E575C7,K18,A14,98,95,X03",
+            "E10,#D33997,K23,A16,83,94,X16", "E11,#F7DAD4,K2,A19,125,131,C0Y", "E12,#F893BF,K16,A20,126,112,X02",
+            "E13,#B5026A,K24,A21,127,124,X26", "E14,#FAD4BF,K5,E21,137,140,C00", "E15,#F5C9CA,K4,A23,135,139,Z1R",
+            "E16,#FBF4EC,K1,IC2,221,206,BOR", "E17,#F7E3EC,K11,IC7,220,205,X0R", "E18,#FBCBDB,K13,IC13,210,210,X00",
+            "E19,#F6BBD1,K14,IC12,215,215,W01", "E20,#D7C6CE,K26,Q1,241,241,X1Y", "E21,#C09DA4,K27,Q2,253,238,Z30",
+            "E22,#B58B9F,K28,Q4,252,237,X32", "E23,#937D8A,K29,Q3,250,235,W6Y", "E24,#DEBEE5,K30,G8,282,267,W0Y",
+            "F1,#FF9280,K8,A1,35,35,Z03", "F2,#F73D48,C2,A2,31,31,A05", "F3,#EF4D3E,C3,A3,53,72,A04",
+            "F4,#F92B40,C6,A4,54,73,A16", "F5,#E30328,C7,A5,5,5,A17", "F6,#913635,Z21,E9,16,16,B55",
+            "F7,#911932,C10,A6,47,47,Z66", "F8,#BB0126,C9,A17,81,92,Z37", "F9,#E0677A,K20,A15,82,93,Z04",
+            "F10,#874628,Z20,E15,116,115,B35", "F11,#6F321D,Z23,E16,117,129,A64", "F12,#F8516D,C1,A22,136,134,Z05",
+            "F13,#F45C45,C4,A24,148,148,B16", "F14,#FCADB2,K7,A25,154,154,Z01", "F15,#D50527,C8,DH8,204,191,A37",
+            "F16,#F8C0A9,K6,IC10,211,211,A00", "F17,#E89B7D,K31,Q9,245,245,B13", "F18,#D07E4A,K32,Q10,246,246,B25",
+            "F19,#BE454A,K33,Q5,243,243,Z35", "F20,#C69495,K34,R4,275,260,A22", "F21,#F2BBC6,K35,R3,266,251,Z10",
+            "F22,#F7C3D0,K36,R2,272,257,A01", "F23,#EC806D,K37,R5,264,249,A03", "F24,#E09DAF,K38,G9,283,268,Z02",
+            "F25,#E84854,K39,G10,284,269,A14",
+            "G1,#FFE4D3,Z2,E3,76,81,D0Y", "G2,#FCC6AC,Z5,E4,49,49,C01", "G3,#F1C4A5,Z6,E5,80,85,B11",
+            "G4,#DCB387,Z8,E6,19,19,D13", "G5,#E7B34E,Z10,B7,43,43,D04", "G6,#F3A014,Z11,B8,50,50,C15",
+            "G7,#98503A,Z18,E7,17,17,C43", "G8,#4B2B1C,Z22,E8,12,12,A74", "G9,#E4B685,Z9,E10,91,102,D12",
+            "G10,#DA8C42,Z15,B9,87,101,D24", "G11,#DAC898,Z7,E12,112,118,E12", "G12,#FEC993,Z13,E13,113,127,D11",
+            "G13,#B2714B,Z14,E17,115,114,C23", "G14,#8B684C,Z17,E14,114,123,C41", "G15,#F6F8E3,Z3,E19,133,143,F0Y",
+            "G16,#F2D8C1,Z4,E20,134,138,E1Y", "G17,#79544E,Z16,E22,144,137,B70", "G18,#FFE4D6,Z1,DH5,203,203,D0R",
+            "G19,#DD7D41,Z12,DH3,208,195,D15", "G20,#A5452F,Z19,DH13,199,199,C44", "G21,#B38561,Z24,Q8,247,247,C33",
+            "H1,#FBFBFB,A2,F1,15,15,P00", "H2,#FFFFFF,A1,F2,1,1,V00", "H3,#B4B4B4,B3,F3,13,13,V30",
+            "H4,#878787,B5,F4,78,83,V50", "H5,#464648,B6,F5,45,45,V80", "H6,#2C2C2C,B7,F6,51,70,V90",
+            "H7,#010101,B9,F7,14,14,VK0", "H8,#E7D6DC,A9,F8,85,86,X1R", "H9,#EFEDEE,A8,F10,95,87,V10",
+            "H10,#ECEAEB,A10,F9,86,88,Z0R", "H11,#CDCDCD,B1,F11,123,121,V11", "H12,#FDF6EE,A4,E18,132,144,H0R",
+            "H13,#F4EFD1,A6,E23,145,146,E00", "H14,#CED7D4,B2,F12,146,145,M1R", "H15,#98A6A6,B4,DH4,201,201,S3Y",
+            "H16,#1B1213,B8,DH11,200,200,VL0", "H17,#F0EEEF,A7,IC6,214,214,", "H18,#FCFFF8,A3,IC1,219,204,F0R",
+            "H19,#F2EEE5,A5,IC11,209,209,E0R", "H20,#96A09F,B10,Q12,251,236,S3R", "H21,#F8FBE6,A11,G1,291,276,I0R",
+            "H22,#CACADA,A12,G2,277,277,H1R", "H23,#9B9C94,B11,G11,278,278,H2R",
+            "M1,#BBC6B6,Y1,YX11,168,168,J2R", "M2,#909994,Y2,YX12,172,172,J4Y", "M3,#697E80,Y3,YX2,166,166,S6Y",
+            "M4,#E0D4BC,Y4,YX15,167,167,D1Y", "M5,#D0CBAE,Y5,YX6,174,159,F10", "M6,#B0AA86,Y6,YX1,169,169,E20",
+            "M7,#B0A796,Y7,YX13,171,171,B3Y", "M8,#AE8082,Y8,YX14,177,162,A30", "M9,#A88764,Y9,YX10,170,170,D41",
+            "M10,#C6B2BB,Y10,YX9,164,164,X3R", "M11,#9D7693,Y11,YX4,176,161,X40", "M12,#644B51,Y12,YX5,173,173,B7Y",
+            "M13,#C79266,Y13,YX8,175,160,B23", "M14,#C37463,Y14,YX3,165,165,B24", "M15,#747D7A,Y15,YX7,178,163,M5R",
+            "P1,#F9F9F9,M1,P1,71,62,", "P2,#ABABAB,M2,P2,55,69,", "P3,#B6DBAF,M3,P4,73,66,", "P4,#FEA2A3,M4,P5,72,64,",
+            "P5,#EB903F,M5,P3,56/56,63,", "P6,#63CEA2,M6,P8,157/70,65,", "P7,#E79273,M7,P6,159/68,68,",
+            "P8,#ECDB59,M8,P7,158/67,67,", "P9,#DBD9DA,M9,P13,195,178,", "P10,#DBC7EA,M10,P18,187,187,",
+            "P11,#F1E9D4,M11,P9,185,185,", "P12,#E9EDEE,M12,P12,190,190,", "P13,#ADCBF1,M13,P17,193,176,",
+            "P14,#337BAD,M14,P22,183,183,", "P15,#668575,M15,P23,184,184,", "P16,#FDC24E,M16,P14,182,182,",
+            "P17,#FDA42E,M17,P19,179,179,", "P18,#FEBDA7,M18,P11,194,177,", "P19,#FFDEE9,M19,P10,186,186,",
+            "P20,#FCBFD1,M21,P15,188,180,", "P21,#E8BEC2,M20,P20,180,188,", "P22,#DFAAA4,M22,P16,189,189,",
+            "P23,#A3656A,M23,P21,181,181,",
+            "Q1,#F2A5E8,W3,W3,109,W3,", "Q2,#E9EC91,W4,W4,111,W4,", "Q3,#FFFF00,W1,W1,107,W1,",
+            "Q4,#FFEBFA,W2,W2,110,W2,", "Q5,#76CEDE,W5,W5,108,W5,",
+            "R1,#D40E1F,L1,T1,67,52,", "R2,#F13484,L2,N1,24,24,", "R3,#FB852B,L3,N2,22,22,",
+            "R4,#F8ED33,L4,N3,21,21,", "R5,#32C958,L5,N4,23,23,", "R6,#1EBA93,L6,T4,69,55,",
+            "R7,#1D779C,L7,T5,37,37,", "R8,#1960C8,L8,T3,68,54,", "R9,#945AB1,L9,T2,70,56,",
+            "R10,#F8DA54,L10,L2,156,53,", "R11,#FCECF7,L11,T6,151,151,", "R12,#D8D4D3,L12,T7,160,157,",
+            "R13,#56534E,L13,-,152,152,", "R14,#A3E7DC,S1,S1,231,231,", "R15,#78CEE7,S2,S2,237,224,",
+            "R16,#3FCDCE,S3,S3,238,225,", "R17,#4E8379,S4,S5,233,233,", "R18,#7DCA9C,S5,S4,235,222,",
+            "R19,#C8E664,S6,S11,227,227,", "R20,#E3CCBA,S7,S6,230,230,", "R21,#A17140,S8,S13,234,221,",
+            "R22,#6B372C,S9,S15,226,226,", "R23,#F6BB6F,S10,S12,224,219,", "R24,#F3C6C0,S11,S4,228,228,",
+            "R25,#C76A62,S12,S14,225,220,", "R26,#D093BC,S13,S9,229,229,", "R27,#E58EAE,S14,S8,232,232,",
+            "R28,#9F85CF,S15,S10,236,223,",
+            "T1,#FCFDFF,L14,L6,155,51,",
+            "Y1,#FF6FB7,N1,Y1,59,59,", "Y2,#FDB583,N2,Y2,60,60,", "Y3,#D8FCA4,N3,Y3,57,57,",
+            "Y4,#91DAFB,N4,Y4,58,58,", "Y5,#E987EA,N5,Y5,61,61,", "Y6,#F7D4B8,-,-,-,-,",
+            "Y7,#F1FA7D,-,-,-,-,", "Y8,#5EE88C,-,-,-,-,", "Y9,#F8F5FE,-,-,-,-,",
+            "ZG1,#DAABB3,GB1,ZG1,254,ZG1,", "ZG2,#D6AA87,GB2,ZG2,255,ZG2,", "ZG3,#C1BD8D,GB3,ZG3,256,ZG3,",
+            "ZG4,#96B69F,GB4,ZG4,257,ZG4,", "ZG5,#849DC6,GB5,ZG5,258,ZG5,", "ZG6,#94BFE2,GB6,ZG6,259,ZG6,",
+            "ZG7,#E2A9D2,GB7,ZG7,260,ZG7,", "ZG8,#AB91C0,GB8,ZG8,261,ZG8,"
+        ];
+
+        const PALETTES = { coco: [], manman: [], panpan: [], mixiaowo: [], shishi: [] };
+
+        brandColorDatabase.forEach(line => {
+            const parts = line.split(',');
+            const baseKey = parts[0], hexCode = parts[1];
+            const cocoId = parts[2], manmanId = parts[3], panpanId = parts[4], mxwId = parts[5], shishiId = parts[6];
+            const tColor = getTextColorForHex(hexCode);
+            
+            const addColor = (arr, id) => {
+                if (id && id !== '-') {
+                    arr.push({ id: id, name: baseKey, hex: hexCode, textColor: tColor });
+                }
+            };
+            
+            addColor(PALETTES.coco, cocoId);
+            addColor(PALETTES.manman, manmanId);
+            addColor(PALETTES.panpan, panpanId);
+            addColor(PALETTES.mixiaowo, mxwId);
+            addColor(PALETTES.shishi, shishiId);
+        });
+
+        // 默认初始化选取
+        AppState.canvas.selectedColorId = PALETTES.coco[0].id;
 
         function hexToRgb(hex) {
             let r=0, g=0, b=0;
@@ -622,14 +719,15 @@
 
             sorted.forEach(([id, count]) => {
                 total += count; const c = activePalette.find(x => x.id === id);
+                if(!c) return; // 防护缺失项
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between bg-white px-3 py-2 rounded border border-slate-100 shadow-sm active:bg-slate-50 transition-colors";
                 div.innerHTML = `
                     <div class="flex items-center gap-2.5">
                         <div class="w-5 h-5 rounded shadow-sm border border-black/10 flex items-center justify-center" style="background-color: ${c.hex}"></div>
                         <div class="flex flex-col">
-                            <span class="text-xs font-bold text-slate-700 leading-tight">${c.name}</span>
-                            <span class="text-[9px] text-slate-400 font-mono tracking-wider">${id}</span>
+                            <span class="text-[11px] font-bold text-slate-700 leading-tight">品牌色号: ${c.id}</span>
+                            <span class="text-[9px] text-slate-400 font-mono tracking-wider">通用标识: ${c.name}</span>
                         </div>
                     </div>
                     <span class="text-[10px] font-mono font-bold text-slate-600 bg-slate-50 px-2 py-1 rounded border border-slate-200">${count}</span>
@@ -642,22 +740,23 @@
         function renderPaletteUI() {
             const grid = document.getElementById('palette-grid'); grid.innerHTML = '';
             const activePalette = PALETTES[AppState.settings.palette];
-            if (!activePalette.find(c => c.id === AppState.canvas.selectedColorId)) AppState.canvas.selectedColorId = activePalette[0].id;
+            if (!activePalette.find(c => c.id === AppState.canvas.selectedColorId)) {
+                AppState.canvas.selectedColorId = activePalette[0].id;
+            }
             
             const curColor = activePalette.find(c => c.id === AppState.canvas.selectedColorId);
             document.getElementById('current-color-preview').style.backgroundColor = curColor.hex;
-            document.getElementById('current-color-name').textContent = curColor.name;
-            document.getElementById('current-color-id').textContent = `ID: ${curColor.id}`;
+            document.getElementById('current-color-name').textContent = `色号: ${curColor.id}`;
+            document.getElementById('current-color-id').textContent = `标识: ${curColor.name}`;
 
             activePalette.forEach(c => {
                 const btn = document.createElement('button');
                 const isSel = AppState.canvas.selectedColorId === c.id;
                 
-                // 更方正的色块，边框更硬朗
                 btn.className = `w-full aspect-square rounded-[3px] border flex items-center justify-center transition-all duration-100 cursor-pointer 
                                  ${isSel ? 'border-brand-500 ring-1 ring-brand-500 z-10 scale-105 shadow-sm' : 'border-slate-200 shadow-sm hover:border-slate-400'}`;
                 btn.style.backgroundColor = c.hex;
-                btn.title = `${c.name} (${c.id})`;
+                btn.title = `品牌号:${c.id} (通用:${c.name})`;
 
                 btn.onclick = () => { 
                     triggerHaptic('light');
@@ -685,7 +784,6 @@
             c.style.cursor = t==='pan'?'grab':(t==='eraser'?'cell':'crosshair');
         }
 
-        // 核心修复：扁平化熨烫效果渲染，彻底移除夸张3D阴影
         function showFramedPreview() {
             if (AppState.gridW === 0) { showToast('请先导入图片'); return; }
             
@@ -734,7 +832,6 @@
 
                 // 4. 扁平化“完全熨烫”渲染
                 ctx.translate(holeX, holeY);
-                // 整体作品在卡纸底部的极弱阴影
                 ctx.shadowColor = 'rgba(0,0,0,0.05)'; ctx.shadowBlur = 2; ctx.shadowOffsetY = 1;
                 
                 for (let y = 0; y < gh; y++) {
@@ -742,22 +839,20 @@
                         const c = AppState.gridData[y * gw + x];
                         if (c) {
                             ctx.fillStyle = c.hex;
-                            // 稍微放大消除间隙，呈现完全融合成一整块板的效果 (扁平化)
                             ctx.fillRect(Math.floor(x * bs), Math.floor(y * bs), Math.ceil(bs + 0.5), Math.ceil(bs + 0.5));
                         }
                     }
                 }
                 ctx.shadowColor = 'transparent'; 
                 
-                // 添加细微的方块边界感，而非圆润高光 (更像工业化图纸/标准熨烫)
                 if (bs > 4) {
                     ctx.fillStyle = 'rgba(0,0,0,0.03)';
                     for (let y = 0; y < gh; y++) {
                         for (let x = 0; x < gw; x++) {
                             if (AppState.gridData[y * gw + x]) {
                                 const px = x * bs, py = y * bs;
-                                ctx.fillRect(px, py, bs, 1); // 顶缘
-                                ctx.fillRect(px, py, 1, bs); // 左缘
+                                ctx.fillRect(px, py, bs, 1);
+                                ctx.fillRect(px, py, 1, bs);
                             }
                         }
                     }
@@ -815,7 +910,7 @@
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 const gridStartX = COORD_SIZE + pad, gridStartY = COORD_SIZE + pad;
 
-                ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 for (let y=0; y<h; y++) {
                     for (let x=0; x<w; x++) {
                         const c = AppState.gridData[y*w+x];
@@ -860,22 +955,23 @@
                 const legendStartY = gridStartY + h*CELL_SIZE + COORD_SIZE + 40;
                 let lx = pad, ly = legendStartY;
                 const activePalette = PALETTES[AppState.settings.palette];
+                const brandName = document.getElementById('setting-palette').options[document.getElementById('setting-palette').selectedIndex].text;
                 
                 ctx.fillStyle = '#1e293b'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'left';
-                ctx.fillText('物料清单 (BOM)', lx, ly); ly += 30; ctx.font = 'bold 13px Arial';
+                ctx.fillText(`物料清单 (BOM) - ${brandName}`, lx, ly); ly += 30; ctx.font = 'bold 13px Arial';
 
                 usedColors.forEach((entry, index) => {
                     const id = entry[0], count = entry[1];
                     const colorObj = activePalette.find(c => c.id === id);
                     if(index > 0 && index % colsPerLegendRow === 0) { lx = pad; ly += 50; }
                     
-                    // 方块色卡
-                    ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 24, 24);
-                    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.strokeRect(lx, ly, 24, 24);
-                    
-                    ctx.fillStyle = '#475569'; ctx.textAlign = 'left'; 
-                    ctx.fillText(`${id}  × ${count}`, lx + 36, ly + 16);
-                    
+                    if(colorObj) {
+                        ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 24, 24);
+                        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.strokeRect(lx, ly, 24, 24);
+                        
+                        ctx.fillStyle = '#475569'; ctx.textAlign = 'left'; 
+                        ctx.fillText(`${id}  × ${count}`, lx + 36, ly + 16);
+                    }
                     lx += 120;
                 });
 
