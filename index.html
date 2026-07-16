@@ -42,7 +42,6 @@
             --nav-height: 56px;
         }
 
-        /* 基础重置与原生级防弹跳 */
         html, body {
             height: 100dvh; 
             width: 100vw;
@@ -55,93 +54,45 @@
             overscroll-behavior-y: none;
         }
 
-        .native-scroll {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior-y: contain;
-        }
-        
-        /* 定制滚动条，更细更直 */
+        .native-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
         .native-scroll::-webkit-scrollbar { width: 4px; background: transparent; }
         .native-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
 
-        /* 画布区点阵背景 */
         .canvas-bg {
             background-color: #e2e8f0;
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
-        /* 扁平化 Range 滑块 */
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; height: 24px; }
         input[type=range]:focus { outline: none; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px; width: 8px;
-            border-radius: 2px;
-            background: #6366f1;
-            cursor: pointer; margin-top: -6px;
-            transition: transform 0.1s;
+            -webkit-appearance: none; height: 16px; width: 8px; border-radius: 2px; background: #6366f1; cursor: pointer; margin-top: -6px; transition: transform 0.1s;
         }
         input[type=range]::-webkit-slider-thumb:active { transform: scaleX(1.5); }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px;
-            background: #cbd5e1; border-radius: 2px; cursor: pointer;
-        }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #cbd5e1; border-radius: 2px; cursor: pointer; }
 
-        /* 方正的 Toggle 开关 */
         .toggle-switch {
-            width: 40px; height: 20px; border-radius: 4px; background-color: #cbd5e1;
-            position: relative; cursor: pointer; transition: background-color 0.2s ease;
+            width: 40px; height: 20px; border-radius: 4px; background-color: #cbd5e1; position: relative; cursor: pointer; transition: background-color 0.2s ease;
         }
         .toggle-switch.active { background-color: #6366f1; }
         .toggle-knob {
-            width: 14px; height: 14px; border-radius: 2px; background-color: white;
-            position: absolute; top: 3px; left: 3px; transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            width: 14px; height: 14px; border-radius: 2px; background-color: white; position: absolute; top: 3px; left: 3px; transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
 
-        /* 滑动视图架构 */
-        .view-pager-container {
-            display: flex;
-            width: 300vw;
-            height: 100%;
-            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform;
-        }
-        
-        .view-panel {
-            width: 100vw;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            background: #f8fafc;
-        }
+        .view-pager-container { display: flex; width: 300vw; height: 100%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
+        .view-panel { width: 100vw; height: 100%; display: flex; flex-direction: column; flex-shrink: 0; background: #f8fafc; }
 
-        /* 桌面端布局 */
         @media (min-width: 768px) {
             body { padding: 12px; background-color: #e2e8f0; }
-            .view-pager-container {
-                width: 100%;
-                transform: none !important;
-                transition: none;
-                gap: 12px;
-            }
-            .view-panel {
-                width: auto;
-                border-radius: 6px;
-                box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
-                background: white;
-                border: 1px solid rgba(0,0,0,0.05);
-            }
+            .view-pager-container { width: 100%; transform: none !important; transition: none; gap: 12px; }
+            .view-panel { width: auto; border-radius: 6px; box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05); background: white; border: 1px solid rgba(0,0,0,0.05); }
             #panel-settings, #panel-materials { flex: 0 0 320px; }
             #panel-canvas { flex: 1; }
             .mobile-nav { display: none !important; }
         }
 
-        /* 方正 Toast 和 Modal */
         #toast-container { position: fixed; top: max(24px, var(--s-top)); left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
         .toast { background: rgba(15, 23, 42, 0.95); color: #fff; padding: 10px 20px; border-radius: 4px; font-size: 13px; display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .toast.show { opacity: 1; transform: translateY(0); }
@@ -163,7 +114,7 @@
                 <div class="w-7 h-7 rounded bg-slate-800 flex items-center justify-center text-white">
                     <i class="fa-solid fa-shapes text-[12px]"></i>
                 </div>
-                <h1 class="text-sm font-bold text-slate-800 tracking-tight">拼豆工坊 <span class="text-brand-500 font-black">1.0</span></h1>
+                <h1 class="text-sm font-bold text-slate-800 tracking-tight">拼豆工坊 <span class="text-brand-500 font-black">1.1</span></h1>
             </div>
             
             <div class="flex items-center gap-2" id="header-actions" style="display: none;">
@@ -184,7 +135,6 @@
             <!-- 视图 1: 设置与调整 -->
             <aside id="panel-settings" class="view-panel">
                 <div class="native-scroll flex-1 p-4 pb-28 md:pb-6 space-y-5">
-                    
                     <!-- 图片导入区 -->
                     <div class="space-y-2.5">
                         <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -219,26 +169,34 @@
                             <p class="text-[10px] text-slate-400 text-center">决定最终成品的精细度和尺寸</p>
                         </div>
 
-                        <!-- 替换为全新品牌色卡选项 -->
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-700 block">专属色彩对照库</label>
                             <div class="relative">
-                            <select id="setting-palette" class="w-full appearance-none bg-white border border-slate-200 rounded-md px-3 py-2.5 text-xs text-slate-700 font-medium focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer">
-                                <option value="coco">COCO (可可) 拼豆色</option>
-                                <option value="manman">漫漫 (ManMan) 拼豆色</option>
-                                <option value="panpan">盼盼 (PanPan) 拼豆色</option>
-                                <option value="mixiaowo">咪小窝 拼豆色</option>
-                                <option value="shishi">柿柿 拼豆色</option>
-                            </select>
-                            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[10px]"></i>
-                        </div>
+                                <select id="setting-palette" class="w-full appearance-none bg-white border border-slate-200 rounded-md px-3 py-2.5 text-xs text-slate-700 font-medium focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer">
+                                    <option value="coco">COCO (可可) 拼豆色</option>
+                                    <option value="manman">漫漫 (ManMan) 拼豆色</option>
+                                    <option value="panpan">盼盼 (PanPan) 拼豆色</option>
+                                    <option value="mixiaowo">咪小窝 拼豆色</option>
+                                    <option value="shishi">柿柿 拼豆色</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[10px]"></i>
+                            </div>
                         </div>
 
                         <div class="space-y-2">
+                            <!-- 新增智能净化杂色选项 -->
+                            <div class="flex items-center justify-between p-3 bg-brand-50 rounded-md border border-brand-100 shadow-sm cursor-pointer" onclick="document.getElementById('setting-clean-noise').click()">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-brand-700">净化杂色 (智能去孤立点)</span>
+                                    <span class="text-[10px] text-brand-500/80">保留轮廓，自动融合细碎噪点</span>
+                                </div>
+                                <div id="setting-clean-noise" class="toggle-switch active pointer-events-none"><div class="toggle-knob"></div></div>
+                            </div>
+                            
                             <div class="flex items-center justify-between p-3 bg-white rounded-md border border-slate-200 shadow-sm cursor-pointer" onclick="document.getElementById('setting-dither').click()">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-slate-700">色彩抖动 (Dithering)</span>
-                                    <span class="text-[10px] text-slate-400">开启后渐变过渡更自然</span>
+                                    <span class="text-[10px] text-slate-400">开启后产生散点，过渡更平缓</span>
                                 </div>
                                 <div id="setting-dither" class="toggle-switch pointer-events-none"><div class="toggle-knob"></div></div>
                             </div>
@@ -246,7 +204,7 @@
                             <div class="flex items-center justify-between p-3 bg-white rounded-md border border-slate-200 shadow-sm cursor-pointer" onclick="document.getElementById('setting-ignore-white').click()">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-slate-700">滤除纯白背景</span>
-                                    <span class="text-[10px] text-slate-400">将白色视为空白区域</span>
+                                    <span class="text-[10px] text-slate-400">将白色视为空白透明区域</span>
                                 </div>
                                 <div id="setting-ignore-white" class="toggle-switch active pointer-events-none"><div class="toggle-knob"></div></div>
                             </div>
@@ -257,8 +215,6 @@
 
             <!-- 视图 2: 中间画布区 -->
             <main id="panel-canvas" class="view-panel relative bg-white">
-                
-                <!-- 空状态 -->
                 <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-slate-50">
                     <div class="w-16 h-16 bg-white rounded-md shadow-sm border border-slate-200 flex items-center justify-center mb-4 text-slate-300">
                         <i class="fa-solid fa-layer-group text-3xl"></i>
@@ -269,7 +225,6 @@
                 </div>
 
                 <div id="workspace" class="flex-1 relative canvas-bg hidden w-full h-full">
-                    <!-- 扁平化工具栏 -->
                     <div class="ui-layer absolute top-4 left-1/2 -translate-x-1/2 flex items-center p-1 bg-white border border-slate-200 shadow-sm rounded-md z-20">
                         <div class="flex gap-0.5">
                             <button class="tool-btn active-tool w-8 h-8 rounded flex items-center justify-center text-white bg-slate-700 transition-all text-xs" data-tool="pan"><i class="fa-solid fa-hand"></i></button>
@@ -277,16 +232,12 @@
                             <button class="tool-btn w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs" data-tool="fill"><i class="fa-solid fa-fill-drip"></i></button>
                             <button class="tool-btn w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs" data-tool="eraser"><i class="fa-solid fa-eraser"></i></button>
                         </div>
-                        
                         <div class="w-px h-5 bg-slate-200 mx-1.5"></div>
-                        
                         <div class="flex gap-0.5">
                             <button id="btn-zoom-in" class="w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs"><i class="fa-solid fa-plus"></i></button>
                             <button id="btn-zoom-out" class="w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs"><i class="fa-solid fa-minus"></i></button>
                         </div>
-                        
                         <div class="w-px h-5 bg-slate-200 mx-1.5"></div>
-                        
                         <div class="flex gap-0.5">
                             <button id="btn-toggle-grid" class="w-8 h-8 rounded flex items-center justify-center text-white bg-brand-500 transition-all text-xs"><i class="fa-solid fa-border-none"></i></button>
                             <button id="btn-toggle-shape" class="w-8 h-8 rounded flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all text-xs"><i class="fa-solid fa-circle"></i></button>
@@ -295,7 +246,6 @@
                     
                     <canvas id="main-canvas" class="absolute inset-0 z-10" style="touch-action: none;"></canvas>
                     
-                    <!-- 移动端网格宽度快捷调节 (仅在设计视图下显示) -->
                     <div class="ui-layer absolute left-4 right-4 bg-white/95 backdrop-blur-sm border border-slate-200 p-3 rounded-lg shadow-float z-20 md:hidden flex items-center gap-3" style="bottom: calc(var(--nav-height) + var(--s-bottom) + 16px);">
                         <span class="text-xs font-bold text-slate-700 whitespace-nowrap">网格宽度</span>
                         <input type="range" id="canvas-setting-width" min="10" max="150" value="50" class="flex-1">
@@ -307,7 +257,6 @@
             <!-- 视图 3: 材料清单 -->
             <aside id="panel-materials" class="view-panel bg-white">
                 <div class="pt-3 px-4 pb-2 border-b border-slate-200 bg-slate-50 z-10 shrink-0">
-                    <!-- 紧凑当前颜色指示器 -->
                     <div class="flex items-center gap-3 mb-3 p-2 rounded-md bg-white border border-slate-200">
                         <div id="current-color-preview" class="w-8 h-8 rounded shadow-inner border border-black/10 transition-colors"></div>
                         <div class="flex flex-col flex-1">
@@ -317,28 +266,21 @@
                             <span id="current-color-id" class="text-[10px] font-mono text-slate-500 mt-1">ID: --</span>
                         </div>
                     </div>
-                    <!-- 方块色卡 -->
                     <div id="palette-grid" class="grid grid-cols-7 gap-1 max-h-48 overflow-y-auto native-scroll pb-1"></div>
                 </div>
 
-                <!-- 统计列表 -->
                 <div class="flex-1 flex flex-col overflow-hidden bg-white">
                     <div class="px-4 py-2.5 flex items-center justify-between shrink-0 bg-slate-50 border-b border-slate-100">
                         <h3 class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">物料核算 (BOM)</h3>
                         <span id="total-beads-count" class="text-[10px] font-mono font-bold text-slate-700 bg-white border border-slate-200 px-2 py-0.5 rounded">0 PCS</span>
                     </div>
-                    <div id="materials-list" class="native-scroll flex-1 p-3 pb-28 md:pb-4 space-y-1.5">
-                        <div class="h-full flex flex-col items-center justify-center text-slate-400">
-                            <i class="fa-solid fa-box-open text-2xl mb-2 text-slate-300"></i>
-                            <span class="text-xs font-medium">尚无使用材料记录</span>
-                        </div>
-                    </div>
+                    <div id="materials-list" class="native-scroll flex-1 p-3 pb-28 md:pb-4 space-y-1.5"></div>
                 </div>
             </aside>
         </div>
     </main>
 
-    <!-- 极简方正风格底部导航 -->
+    <!-- 底部导航 -->
     <div style="padding-bottom: var(--s-bottom);" class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40">
         <div class="flex items-center h-[56px]">
             <button class="nav-btn flex-1 flex flex-col items-center justify-center h-full relative text-slate-400 active-nav" data-index="0">
@@ -354,17 +296,15 @@
                 <span class="text-[10px] font-bold tracking-wide transition-colors">清单</span>
             </button>
         </div>
-        <!-- 激活指示条 -->
         <style>
             .nav-btn.active-nav { color: #1e293b; }
             .nav-btn.active-nav::after { content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #1e293b; border-radius: 0 0 2px 2px; }
         </style>
     </div>
 
-    <!-- 扁平化极简装裱预览 -->
+    <!-- 极简装裱预览 -->
     <div id="preview-modal" class="fixed inset-0 z-[100] modal-overlay hidden flex items-center justify-center p-4">
         <div class="modal-content w-full max-w-2xl bg-white rounded-md shadow-2xl overflow-hidden flex flex-col border border-slate-200" style="max-height: calc(100dvh - var(--s-top) - var(--s-bottom) - 32px);">
-            
             <div class="h-12 flex items-center justify-between px-4 bg-slate-50 border-b border-slate-200 shrink-0">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-crop-simple text-slate-600"></i>
@@ -380,7 +320,6 @@
                     <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3 text-slate-400"></i>
                     <span class="text-xs font-medium">生成扁平融化质感中...</span>
                 </div>
-                <!-- 结果图，绝对自适应防溢出 -->
                 <img id="preview-image" class="max-w-full max-h-full object-contain drop-shadow-sm transition-opacity duration-300 opacity-0" src="" alt="Preview">
             </div>
             
@@ -398,7 +337,6 @@
     </div>
 
     <script>
-        // 触觉反馈引擎
         function triggerHaptic(type = 'light') {
             if (!navigator.vibrate) return;
             try {
@@ -410,24 +348,19 @@
 
         const AppState = {
             imageObj: null, gridData: [], gridW: 0, gridH: 0, materials: {}, currentTab: 1,
-            // 默认选中第一套牌子 coco
-            settings: { width: 50, palette: 'coco', dither: false, ignoreWhite: true, brightness: 0, contrast: 0, showGrid: true, shape: 'circle' },
+            // 默认添加 cleanNoise 设置状态，默认开启
+            settings: { width: 50, palette: 'coco', dither: false, cleanNoise: true, ignoreWhite: true, brightness: 0, contrast: 0, showGrid: true, shape: 'circle' },
             canvas: { scale: 1, offsetX: 0, offsetY: 0, isDragging: false, startX: 0, startY: 0, tool: 'pan', selectedColorId: null, beadSize: 24 }
         };
 
-        // 动态亮度计算：自动决定文字应为黑色或白色
         const getTextColorForHex = (hex) => {
             const h = hex.replace('#', '');
             if(h.length < 6) return '#000000';
-            const r = parseInt(h.substr(0, 2), 16);
-            const g = parseInt(h.substr(2, 2), 16);
-            const b = parseInt(h.substr(4, 2), 16);
-            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-            return (yiq >= 128) ? '#000000' : '#FFFFFF';
+            const r = parseInt(h.substr(0, 2), 16), g = parseInt(h.substr(2, 2), 16), b = parseInt(h.substr(4, 2), 16);
+            return (((r * 299) + (g * 587) + (b * 114)) / 1000 >= 128) ? '#000000' : '#FFFFFF';
         };
 
-        // 全新构造的基于提供的多品牌对照表的高级 CSV 数据池
-        // 字段索引: 0:通用ID, 1:HEX, 2:COCO, 3:漫漫, 4:盼盼, 5:咪小窝, 6:柿柿
+        // 数据池
         const brandColorDatabase = [
             "A1,#FAF5CD,E2,E2,65,77,E0Y", "A2,#FCFED6,E1,B1,2,2,H00", "A3,#FCFF92,E5,B2,28,28,H02",
             "A4,#F7EC5C,E7,B3,3,3,F05", "A5,#FFE44B,D3,B4,74,79,F15", "A6,#FDA951,D5,B5,29,29,E06",
@@ -543,19 +476,13 @@
             const tColor = getTextColorForHex(hexCode);
             
             const addColor = (arr, id) => {
-                if (id && id !== '-') {
-                    arr.push({ id: id, name: baseKey, hex: hexCode, textColor: tColor });
-                }
+                if (id && id !== '-') arr.push({ id: id, name: baseKey, hex: hexCode, textColor: tColor });
             };
             
-            addColor(PALETTES.coco, cocoId);
-            addColor(PALETTES.manman, manmanId);
-            addColor(PALETTES.panpan, panpanId);
-            addColor(PALETTES.mixiaowo, mxwId);
-            addColor(PALETTES.shishi, shishiId);
+            addColor(PALETTES.coco, cocoId); addColor(PALETTES.manman, manmanId); addColor(PALETTES.panpan, panpanId);
+            addColor(PALETTES.mixiaowo, mxwId); addColor(PALETTES.shishi, shishiId);
         });
 
-        // 默认初始化选取
         AppState.canvas.selectedColorId = PALETTES.coco[0].id;
 
         function hexToRgb(hex) {
@@ -580,6 +507,7 @@
             const h = Math.max(1, Math.round(w * aspect));
             AppState.gridW = w; AppState.gridH = h; tCanvas.width = w; tCanvas.height = h;
 
+            // 最近邻缩放，保证色彩边缘锐利
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(AppState.imageObj, 0, 0, w, h);
             const data = ctx.getImageData(0, 0, w, h).data;
@@ -589,9 +517,9 @@
             const activePalette = PALETTES[AppState.settings.palette];
             const paletteRgb = activePalette.map(p => ({ ...p, ...hexToRgb(p.hex) }));
             const pLen = paletteRgb.length;
-            const newGrid = new Array(w * h).fill(null);
-            AppState.materials = {};
+            let newGrid = new Array(w * h).fill(null);
 
+            // 1. 颜色映射与抖动计算
             for (let y = 0; y < h; y++) {
                 for (let x = 0; x < w; x++) {
                     const idx = (y * w + x) * 4;
@@ -602,8 +530,8 @@
                     
                     r = Math.max(0, Math.min(255, r)); g = Math.max(0, Math.min(255, g)); b = Math.max(0, Math.min(255, b));
 
-                    if (a < 128) continue;
-                    if (AppState.settings.ignoreWhite && r > 240 && g > 240 && b > 240) continue;
+                    if (a < 128) continue; // 透明
+                    if (AppState.settings.ignoreWhite && r > 240 && g > 240 && b > 240) continue; // 纯白
 
                     let minDest = Infinity; let closest = paletteRgb[0];
                     for (let j = 0; j < pLen; j++) {
@@ -613,9 +541,8 @@
                     }
 
                     newGrid[y * w + x] = activePalette.find(c => c.id === closest.id);
-                    if (!AppState.materials[closest.id]) AppState.materials[closest.id] = 0;
-                    AppState.materials[closest.id]++;
 
+                    // 传递误差
                     if (AppState.settings.dither) {
                         const er = r - closest.r, eg = g - closest.g, eb = b - closest.b;
                         const dist = (dx, dy, f) => {
@@ -630,6 +557,78 @@
                     }
                 }
             }
+
+            // 2. 净化杂色 (去孤立点形态学算法)
+            if (AppState.settings.cleanNoise) {
+                let currentGrid = newGrid;
+                const maxIterations = 3; // 迭代3次以达到理想的平滑效果
+                
+                for (let iter = 0; iter < maxIterations; iter++) {
+                    let tempGrid = [...currentGrid];
+                    let changed = false;
+                    
+                    for (let y = 0; y < h; y++) {
+                        for (let x = 0; x < w; x++) {
+                            const idx = y * w + x;
+                            const centerColor = currentGrid[idx];
+                            if (!centerColor) continue; // 忽略空白区域
+                            
+                            let colorCounts = {};
+                            let maxCount = 0;
+                            let dominantColor = null;
+                            let centerCount = 0;
+                            
+                            // 扫描 3x3 邻域 (最多8个邻居)
+                            for (let dy = -1; dy <= 1; dy++) {
+                                for (let dx = -1; dx <= 1; dx++) {
+                                    if (dx === 0 && dy === 0) continue;
+                                    const nx = x + dx, ny = y + dy;
+                                    if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                                        const nColor = currentGrid[ny * w + nx];
+                                        if (nColor) {
+                                            if (nColor.id === centerColor.id) {
+                                                centerCount++;
+                                            }
+                                            colorCounts[nColor.id] = (colorCounts[nColor.id] || 0) + 1;
+                                            if (colorCounts[nColor.id] > maxCount) {
+                                                maxCount = colorCounts[nColor.id];
+                                                dominantColor = nColor;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // 核心判定规则：
+                            // 如果它是完全孤立的像素（周围0个同伴），只要有其他颜色占据主导（>=2），就融合它
+                            if (centerCount === 0 && maxCount >= 2 && dominantColor) {
+                                tempGrid[idx] = dominantColor;
+                                changed = true;
+                            } 
+                            // 或者是突出的端点/微小杂色块（周围只有1个同伴），且旁边有绝对大面积的色块（>=4），也融合它
+                            else if (centerCount === 1 && maxCount >= 4 && dominantColor) {
+                                tempGrid[idx] = dominantColor;
+                                changed = true;
+                            }
+                        }
+                    }
+                    currentGrid = tempGrid;
+                    // 如果这一轮没有任何修改，说明已经完全平滑，可以提前退出循环
+                    if (!changed) break; 
+                }
+                newGrid = currentGrid;
+            }
+
+            // 3. 统计最终材料并更新
+            AppState.materials = {};
+            for (let i = 0; i < newGrid.length; i++) {
+                const cObj = newGrid[i];
+                if (cObj) {
+                    if (!AppState.materials[cObj.id]) AppState.materials[cObj.id] = 0;
+                    AppState.materials[cObj.id]++;
+                }
+            }
+
             AppState.gridData = newGrid;
             updateMaterialsUI(); fitCanvasToScreen(); renderCanvas(); triggerHaptic('medium');
         }
@@ -731,7 +730,7 @@
 
             sorted.forEach(([id, count]) => {
                 total += count; const c = activePalette.find(x => x.id === id);
-                if(!c) return; // 防护缺失项
+                if(!c) return; 
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between bg-white px-3 py-2 rounded border border-slate-100 shadow-sm active:bg-slate-50 transition-colors";
                 div.innerHTML = `
@@ -813,36 +812,31 @@
             setTimeout(() => {
                 const gw = AppState.gridW, gh = AppState.gridH;
                 const safeMaxPixels = window.innerWidth < 768 ? (1024 * 1024 * 1.5) : (2048 * 2048);
-                
                 let bs = Math.floor(Math.sqrt(safeMaxPixels / (gw * gh * 1.69)));
-                bs = Math.max(4, Math.min(bs, 20)); // 防止过大
+                bs = Math.max(4, Math.min(bs, 20)); 
                 
                 const artW = gw * bs, artH = gh * bs;
-                const frameThick = Math.max(artW, artH) * 0.02; // 更细的极简边框
-                const mountThick = Math.max(artW, artH) * 0.08; // 适中的留白
+                const frameThick = Math.max(artW, artH) * 0.02; 
+                const mountThick = Math.max(artW, artH) * 0.08; 
                 
                 const tCanvas = document.createElement('canvas');
                 tCanvas.width = artW + (frameThick + mountThick) * 2;
                 tCanvas.height = artH + (frameThick + mountThick) * 2;
                 const ctx = tCanvas.getContext('2d', { alpha: false });
 
-                // 1. 扁平黑框
                 ctx.fillStyle = '#171717'; ctx.fillRect(0, 0, tCanvas.width, tCanvas.height);
                 
-                // 2. 扁平卡纸 (移除夸张阴影，仅留1px分界线和极弱阴影)
                 const fInX = frameThick, fInY = frameThick, fInW = tCanvas.width-frameThick*2, fInH = tCanvas.height-frameThick*2;
                 ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2;
                 ctx.fillStyle = '#fafafa'; ctx.fillRect(fInX, fInY, fInW, fInH);
                 ctx.shadowColor = 'transparent'; 
                 
-                // 3. 挖孔底 (极简切角)
                 const holeX = fInX + mountThick, holeY = fInY + mountThick;
                 ctx.fillStyle = '#e5e5e5'; ctx.fillRect(holeX, holeY, artW, artH);
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = '#d4d4d4'; ctx.beginPath(); ctx.moveTo(holeX+artW, holeY); ctx.lineTo(holeX, holeY); ctx.lineTo(holeX, holeY+artH); ctx.stroke();
                 ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(holeX, holeY+artH); ctx.lineTo(holeX+artW, holeY+artH); ctx.lineTo(holeX+artW, holeY); ctx.stroke();
 
-                // 4. 扁平化“完全熨烫”渲染
                 ctx.translate(holeX, holeY);
                 ctx.shadowColor = 'rgba(0,0,0,0.05)'; ctx.shadowBlur = 2; ctx.shadowOffsetY = 1;
                 
@@ -906,15 +900,15 @@
             
             setTimeout(() => {
                 const w = AppState.gridW, h = AppState.gridH;
-                const CELL_SIZE = 80, COORD_SIZE = 60; // 翻倍分辨率，单元格放大
+                const CELL_SIZE = 80, COORD_SIZE = 60; 
                 
                 const usedColors = Object.entries(AppState.materials).sort((a,b) => b[1]-a[1]);
                 const colsPerLegendRow = 8;
                 const legendRows = Math.ceil(usedColors.length / colsPerLegendRow);
-                const LEGEND_HEIGHT = legendRows * 100 + 120; // 增加图例区域高度
+                const LEGEND_HEIGHT = legendRows * 100 + 120; 
 
                 const canvas = document.createElement('canvas');
-                const pad = 60; // 增加边缘留白
+                const pad = 60; 
                 canvas.width = COORD_SIZE * 2 + w * CELL_SIZE + pad * 2; 
                 canvas.height = COORD_SIZE * 2 + h * CELL_SIZE + LEGEND_HEIGHT + pad * 2;
                 const ctx = canvas.getContext('2d');
@@ -922,7 +916,7 @@
                 ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 const gridStartX = COORD_SIZE + pad, gridStartY = COORD_SIZE + pad;
 
-                ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; // 字号翻倍
+                ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; 
                 for (let y=0; y<h; y++) {
                     for (let x=0; x<w; x++) {
                         const c = AppState.gridData[y*w+x];
@@ -940,7 +934,7 @@
                 ctx.fillRect(pad, gridStartY, COORD_SIZE, h*CELL_SIZE);
                 ctx.fillRect(gridStartX + w*CELL_SIZE, gridStartY, COORD_SIZE, h*CELL_SIZE);
 
-                ctx.fillStyle = '#475569'; ctx.font = '20px Arial'; // 坐标字号翻倍
+                ctx.fillStyle = '#475569'; ctx.font = '20px Arial'; 
                 for (let x=0; x<w; x++) {
                     const cx = gridStartX + x*CELL_SIZE + CELL_SIZE/2;
                     ctx.fillText(x+1, cx, pad + COORD_SIZE/2); ctx.fillText(x+1, cx, gridStartY + h*CELL_SIZE + COORD_SIZE/2);
@@ -956,7 +950,7 @@
                 for(let y=1; y<h; y++) if(y%5!==0){ ctx.moveTo(pad, gridStartY+y*CELL_SIZE); ctx.lineTo(gridStartX+w*CELL_SIZE+COORD_SIZE, gridStartY+y*CELL_SIZE); }
                 ctx.stroke();
 
-                ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)'; ctx.lineWidth = 4; ctx.beginPath(); // 加粗主网格
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)'; ctx.lineWidth = 4; ctx.beginPath(); 
                 for(let x=0; x<=w; x+=5){ ctx.moveTo(gridStartX+x*CELL_SIZE, pad); ctx.lineTo(gridStartX+x*CELL_SIZE, gridStartY+h*CELL_SIZE+COORD_SIZE); }
                 for(let y=0; y<=h; y+=5){ ctx.moveTo(pad, gridStartY+y*CELL_SIZE); ctx.lineTo(gridStartX+w*CELL_SIZE+COORD_SIZE, gridStartY+y*CELL_SIZE); }
                 if(w%5!==0){ ctx.moveTo(gridStartX+w*CELL_SIZE, pad); ctx.lineTo(gridStartX+w*CELL_SIZE, gridStartY+h*CELL_SIZE+COORD_SIZE); }
@@ -975,16 +969,16 @@
                 usedColors.forEach((entry, index) => {
                     const id = entry[0], count = entry[1];
                     const colorObj = activePalette.find(c => c.id === id);
-                    if(index > 0 && index % colsPerLegendRow === 0) { lx = pad; ly += 80; } // 增加行距
+                    if(index > 0 && index % colsPerLegendRow === 0) { lx = pad; ly += 80; } 
                     
                     if(colorObj) {
-                        ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 48, 48); // 图例色块放大
+                        ctx.fillStyle = colorObj.hex; ctx.fillRect(lx, ly, 48, 48); 
                         ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2; ctx.strokeRect(lx, ly, 48, 48);
                         
                         ctx.fillStyle = '#475569'; ctx.textAlign = 'left'; 
-                        ctx.fillText(`${id}  × ${count}`, lx + 64, ly + 32); // 图例文字放大
+                        ctx.fillText(`${id}  × ${count}`, lx + 64, ly + 32); 
                     }
-                    lx += 240; // 增加列距
+                    lx += 240; 
                 });
 
                 const a = document.createElement('a'); a.href = canvas.toDataURL('image/png', 1.0);
@@ -1040,7 +1034,6 @@
             dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-brand-500', 'bg-brand-50'); });
             dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('border-brand-500', 'bg-brand-50'); handleFile(e.dataTransfer.files[0]); });
 
-            // 全局统一网格宽度调节函数 (同步参数栏、画布栏和装裱预览栏)
             const syncWidthSetting = (val, fromPreview = false) => {
                 AppState.settings.width = val;
                 document.getElementById('setting-width').value = val;
@@ -1055,7 +1048,6 @@
                 clearTimeout(AppState._timer); 
                 AppState._timer = setTimeout(() => {
                     processImage();
-                    // 如果正在打开装裱预览，自动重绘效果
                     if (fromPreview && !document.getElementById('preview-modal').classList.contains('hidden')) {
                         showFramedPreview();
                     }
@@ -1077,7 +1069,11 @@
                     processImage();
                 });
             };
-            bindToggle('setting-dither', 'dither'); bindToggle('setting-ignore-white', 'ignoreWhite');
+            
+            // 绑定全部功能开关
+            bindToggle('setting-clean-noise', 'cleanNoise');
+            bindToggle('setting-dither', 'dither'); 
+            bindToggle('setting-ignore-white', 'ignoreWhite');
 
             document.querySelectorAll('.nav-btn').forEach((btn, index) => {
                 btn.addEventListener('click', () => switchToTab(index));
@@ -1102,13 +1098,11 @@
             const cWrap = document.getElementById('workspace');
             
             document.body.addEventListener('touchmove', function(e) {
-                // 放行滚动区域和滑块类型的原生交互
                 if (e.target.closest('.native-scroll') || e.target.type === 'range') return;
                 e.preventDefault();
             }, { passive: false });
 
             cWrap.addEventListener('touchmove', function(e) { 
-                // 点击到 UI 控制层时放行，允许滑块顺利拖拽
                 if (e.target.closest('.ui-layer')) return;
                 e.preventDefault(); 
             }, { passive: false });
@@ -1150,7 +1144,6 @@
             };
 
             const ptrDown = (e) => {
-                // 防护：如果点击的是悬浮的 UI 工具栏或滑块容器，直接忽略，不触发画布拖拽/绘画
                 if (e.target.closest('.ui-layer')) return;
                 
                 if(AppState.gridW===0) return;
